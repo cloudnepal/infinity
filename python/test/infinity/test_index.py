@@ -14,7 +14,7 @@ def setup_class(request, local_infinity):
     if local_infinity:
         uri = common_values.TEST_LOCAL_PATH
     else:
-        uri = common_values.TEST_REMOTE_HOST
+        uri = common_values.TEST_LOCAL_HOST
     request.cls.uri = uri
     request.cls.test_infinity_obj = TestIndex(uri)
     yield
@@ -30,6 +30,12 @@ class TestInfinity:
 
     def test_create_index_fulltext(self):
         self.test_infinity_obj._test_create_index_fulltext()
+
+    def test_create_index_secondary(self):
+        self.test_infinity_obj._test_create_index_secondary()
+
+    def test_create_index_emvb(self):
+        self.test_infinity_obj._test_create_index_emvb()
 
     def test_drop_non_existent_index(self):
         self.test_infinity_obj._test_drop_non_existent_index()
