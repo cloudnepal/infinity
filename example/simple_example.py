@@ -13,7 +13,7 @@
 # limitations under the License.
 
 '''
-This example is to connect local infinity instance, create table, insert data, search the data
+This example is about connecting to the local infinity instance, creating table, inserting data, and searching data
 '''
 
 import infinity
@@ -22,6 +22,9 @@ import pandas
 try:
     # open a local directory to store the data
     infinity_instance = infinity.connect("/var/infinity")
+
+    # connect to server with 127.0.0.1
+    # infinity_instance = infinity.connect(infinity.common.LOCAL_HOST)
 
     # 'default_db' is the default database
     db_instance = infinity_instance.get_database("default_db")

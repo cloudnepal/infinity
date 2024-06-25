@@ -48,8 +48,9 @@ class ThriftInfinityClient:
         # version: 0.2.0.dev5, client_version: 4
         # version: 0.2.0.dev6, client_version: 5
         # version: 0.2.0.dev7, client_version: 6
-        # version: 0.2.0, client_version: 7
-        res = self.client.Connect(ConnectRequest(client_version=7))
+        # version: 0.2.0.dev8, client_version: 7
+        # version: 0.2.0, client_version: 8
+        res = self.client.Connect(ConnectRequest(client_version=8))
         if res.error_code != 0:
             raise InfinityException(res.error_code, res.error_msg)
         self.session_id = res.session_id
@@ -256,3 +257,7 @@ class ThriftInfinityClient:
         return self.client.ShowBlockColumn(
             ShowBlockColumnRequest(session_id=self.session_id, db_name=db_name, table_name=table_name,
                                    segment_id=segment_id, block_id=block_id, column_id=column_id))
+
+    def optimize(self, db_name: str, table_name: str, optimize_opt: ttypes.OptimizeOptions):
+        return self.client.Optimize(OptimizeRequest(session_id=self.session_id, db_name=db_name, table_name=table_name,
+                                                    optimize_options=optimize_opt))

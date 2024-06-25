@@ -19,7 +19,7 @@ export module infinity_thrift_service;
 import infinity_thrift_types;
 import infinity;
 import stl;
-
+import query_options;
 import column_def;
 import statement_common;
 import data_type;
@@ -29,6 +29,7 @@ import constant_expr;
 import column_expr;
 import function_expr;
 import knn_expr;
+import match_sparse_expr;
 import match_tensor_expr;
 import match_expr;
 import fusion_expr;
@@ -56,7 +57,7 @@ struct ClientVersions {
 export class InfinityThriftService final : public infinity_thrift_rpc::InfinityServiceIf {
 private:
     static constexpr std::string_view ErrorMsgHeader = "[THRIFT ERROR]";
-    static constexpr i64 current_version_index_{7}; // 0.2.0
+    static constexpr i64 current_version_index_{8}; // 0.2.0
 
     static std::mutex infinity_session_map_mutex_;
     static HashMap<u64, SharedPtr<Infinity>> infinity_session_map_;
@@ -94,6 +95,8 @@ public:
 
     void Update(infinity_thrift_rpc::CommonResponse &response, const infinity_thrift_rpc::UpdateRequest &request) final;
 
+    void Optimize(infinity_thrift_rpc::CommonResponse& response, const infinity_thrift_rpc::OptimizeRequest& request) final;
+
     void ListDatabase(infinity_thrift_rpc::ListDatabaseResponse &response, const infinity_thrift_rpc::ListDatabaseRequest &request) final;
 
     void ListTable(infinity_thrift_rpc::ListTableResponse &response, const infinity_thrift_rpc::ListTableRequest &request) final;
@@ -129,15 +132,6 @@ public:
     void ShowIndex(infinity_thrift_rpc::ShowIndexResponse &response, const infinity_thrift_rpc::ShowIndexRequest &request) final;
 
 private:
-
-
-    // SizeT count_ = 0;
-    // std::chrono::duration<double> phase_1_duration_{};
-    // std::chrono::duration<double> phase_2_duration_{};
-    // std::chrono::duration<double> phase_3_duration_{};
-    // std::chrono::duration<double> phase_4_duration_{};
-
-private:
     Tuple<Infinity *, Status> GetInfinityBySessionID(i64 session_id);
 
     Status GetAndRemoveSessionID(i64 session_id);
@@ -160,6 +154,8 @@ private:
 
     static Tuple<KnnExpr *, Status> GetKnnExprFromProto(const infinity_thrift_rpc::KnnExpr &expr);
 
+    static Tuple<MatchSparseExpr *, Status> GetMatchSparseExprFromProto(const infinity_thrift_rpc::MatchSparseExpr &expr);
+
     static Pair<MatchTensorExpr *, Status> GetMatchTensorExprFromProto(const infinity_thrift_rpc::MatchTensorExpr &expr);
 
     static MatchExpr *GetMatchExprFromProto(const infinity_thrift_rpc::MatchExpr &expr);
@@ -176,11 +172,13 @@ private:
 
     static Tuple<UpdateExpr *, Status> GetUpdateExprFromProto(const infinity_thrift_rpc::UpdateExpr &update_expr);
 
+    static OptimizeOptions GetParsedOptimizeOptionFromProto(const infinity_thrift_rpc::OptimizeOptions &options);
+
     static infinity_thrift_rpc::ColumnType::type DataTypeToProtoColumnType(const SharedPtr<DataType> &data_type);
 
     UniquePtr<infinity_thrift_rpc::DataType> DataTypeToProtoDataType(const SharedPtr<DataType> &data_type);
 
-    infinity_thrift_rpc::ElementType::type EmbeddingDataTypeToProtoElementType(const EmbeddingInfo &embedding_info);
+    infinity_thrift_rpc::ElementType::type EmbeddingDataTypeToProtoElementType(const EmbeddingDataType &embedding_data_type);
 
     void
     ProcessDataBlocks(const QueryResult &result, infinity_thrift_rpc::SelectResponse &response, Vector<infinity_thrift_rpc::ColumnField> &columns);
@@ -210,6 +208,9 @@ private:
 
     static void
     HandleTensorArrayType(infinity_thrift_rpc::ColumnField &output_column_field, SizeT row_count, const SharedPtr<ColumnVector> &column_vector);
+
+    static void
+    HandleSparseType(infinity_thrift_rpc::ColumnField &output_column_field, SizeT row_count, const SharedPtr<ColumnVector> &column_vector);
 
     static void HandleRowIDType(infinity_thrift_rpc::ColumnField &output_column_field, SizeT row_count, const SharedPtr<ColumnVector> &column_vector);
 

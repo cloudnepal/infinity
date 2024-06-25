@@ -13,7 +13,7 @@
 # limitations under the License.
 
 '''
-This example is to connect local infinity instance, create table, insert data, import file into a table, and export table's data
+This example is about connecting local infinity instance, creating table, ing data, importing file into a table, and exporting table's data
 '''
 
 import infinity
@@ -25,6 +25,9 @@ project_directory = os.path.dirname(current_path)
 try:
     # open a local directory to store the data
     infinity_instance = infinity.connect("/var/infinity")
+
+    # connect to server with 127.0.0.1
+    # infinity_instance = infinity.connect(infinity.common.LOCAL_HOST)
 
     # 'default_db' is the default database
     db_instance = infinity_instance.get_database("default_db")
