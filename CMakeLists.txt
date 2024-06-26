@@ -177,9 +177,16 @@ add_subdirectory(third_party EXCLUDE_FROM_ALL)
 add_subdirectory(benchmark)
 add_subdirectory(client)
 
+# quit early for scikit-build-core
+# does not need CPack settings
+# does not need to install the infinity target, config files and resources
+if (SKBUILD)
+    return()
+endif ()
+
 # CPack settings
 set(CPACK_PACKAGE_NAME "infinity")
-set(CPACK_PACKAGE_VERSION "0.2.0-dev")
+set(CPACK_PACKAGE_VERSION "0.2.0")
 set(CPACK_PACKAGE_RELEASE 1)
 set(CPACK_PACKAGE_CONTACT "Zhichang Yu <yuzhichang@gmail.com>")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "The AI-native database built for LLM applications, offering incredibly fast vector and full-text search.")
