@@ -279,7 +279,6 @@ target_link_libraries(infinity
         sql_parser
         onnxruntime_mlas
         zsv_parser
-        roaring
         newpfor
         fastpfor
         thrift.a
@@ -331,7 +330,6 @@ target_link_libraries(embedded_infinity_ext PRIVATE
         sql_parser
         onnxruntime_mlas
         zsv_parser
-        roaring
         newpfor
         fastpfor
         lz4.a
@@ -341,6 +339,7 @@ target_link_libraries(embedded_infinity_ext PRIVATE
         jma
         opencc
 )
+target_link_options(embedded_infinity_ext PRIVATE -static-libstdc++ -static-libgcc)
 
 #if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 #    target_link_libraries(embedded_infinity_ext PRIVATE libasan.a)
@@ -458,7 +457,6 @@ target_link_libraries(unit_test
         infinity_core
         onnxruntime_mlas
         zsv_parser
-        roaring
         newpfor
         fastpfor
         lz4.a
