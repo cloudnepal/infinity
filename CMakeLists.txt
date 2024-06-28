@@ -188,7 +188,9 @@ endif ()
 
 # CPack settings
 set(CPACK_PACKAGE_NAME "infinity")
-set(CPACK_PACKAGE_VERSION "0.2.0")
+if(NOT DEFINED CPACK_PACKAGE_VERSION)
+    set(CPACK_PACKAGE_VERSION "0.2.0")
+endif()
 set(CPACK_PACKAGE_RELEASE 1)
 set(CPACK_PACKAGE_CONTACT "Zhichang Yu <yuzhichang@gmail.com>")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "The AI-native database built for LLM applications, offering incredibly fast vector and full-text search.")
@@ -204,8 +206,6 @@ set(CMAKE_INSTALL_PREFIX /usr)
 install(TARGETS infinity DESTINATION bin)
 install(FILES conf/infinity.service DESTINATION lib/systemd/system)
 install(FILES conf/infinity_conf.toml DESTINATION etc)
-install(DIRECTORY resource/jieba DESTINATION ../var/infinity/resource)
-install(DIRECTORY resource/mecab DESTINATION ../var/infinity/resource)
 
 # https://cmake.org/cmake/help/latest/cpack_gen/rpm.html
 # Specify the post-install script for RPM
